@@ -5,7 +5,7 @@ name: Speedtest - Build & Tests
 on:
   # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
   pull_request:
-    branches: [ develop, master ]
+    branches: [ develop ]
     types: [ opened, synchronize ]
 
 jobs:
