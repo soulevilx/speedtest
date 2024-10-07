@@ -24,6 +24,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pvoc
+
       - name: Setup application
         if: success()
         run: |
@@ -61,6 +67,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pvoc
 
       - name: Setup application
         if: success()
