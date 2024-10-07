@@ -11,6 +11,7 @@ use stdClass;
  * @property stdClass $ping
  * @property stdClass $download
  * @property stdClass $upload
+ * @property int $packetLoss
  * @property string $isp
  * @property stdClass $interface
  * @property stdClass $server

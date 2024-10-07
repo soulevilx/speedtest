@@ -1,0 +1,111 @@
+# https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
+name: Speedtest - Build & Tests
+
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+on:
+  # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+  pull_request:
+    branches: [ develop, master ]
+    types: [ opened, synchronize ]
+
+jobs:
+
+  code_standards:
+    name: Code standards check
+
+    strategy:
+      matrix:
+        lint: [ phpstan, phpmd, phpcs ]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup application
+        if: success()
+        run: |
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
+          composer install --no-ansi --no-scripts --no-progress --prefer-dist
+
+      - name: Lint
+        run: composer ${{ matrix.lint }}
+
+  tests:
+    name: Execute UnitTest
+    needs: [ code_standards ]
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        testsuite: [ Unit, Feature ]
+
+    services:
+      mariadb:
+        image: mariadb:10.11
+        ports:
+          - 3306:3306
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
+        env:
+          MARIADB_PASSWORD: root
+          MARIADB_DATABASE: speedtest
+          MARIADB_ROOT_PASSWORD: root
+          MYSQL_PASSWORD: root
+          MYSQL_DATABASE: speedtest
+          MYSQL_ROOT_PASSWORD: root
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup application
+        if: success()
+        run: |
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
+          composer install --no-ansi --no-scripts --no-progress --prefer-dist
+          php artisan key:generate
+          chmod -R 777 storage bootstrap/cache
+          php artisan config:clear
+          php artisan migrate:fresh
+
+      - name: Execute tests (Unit and Feature tests) via PHPUnit
+        if: success()
+        run: |
+          ./vendor/bin/phpunit --coverage-clover coverage-tests-${{ matrix.testsuite }}.xml --testsuite=${{ matrix.testsuite }}
+
+      - name: Coverage
+        uses: actions/upload-artifact@v3
+        if: success()
+        with:
+          name: coverage-reports
+          path: coverage-tests-${{ matrix.testsuite }}.xml
+          retention-days: 1
+
+  finalizing_build:
+    name: "All Parallel Tests passed"
+    needs: [ tests ]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build from artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-reports
+          path: ./reports
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        if: success() && github.event.pull_request.draft == false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./reports
+
+      - name: "Finalizing Tasks"
+        if: success()
+        run: |
+          echo "Build finished"

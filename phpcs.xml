@@ -17,6 +17,7 @@
     <rule ref="PSR12">
         <exclude name="PSR12.Operators.OperatorSpacing.NoSpaceBefore"/>
         <exclude name="PSR12.Operators.OperatorSpacing.NoSpaceAfter"/>
+        <exclude name="PSR12.Classes.ClassInstantiation.MissingParentheses"/>
     </rule>
 
     <rule ref= "Generic.Files.LineLength">
