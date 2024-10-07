@@ -43,7 +43,9 @@ jobs:
     name: Execute UnitTest
     needs: [ code_standards ]
 
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - ubuntu
 
     strategy:
       matrix:
@@ -72,7 +74,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: pvoc
+          coverage: pcov
 
       - name: Setup application
         if: success()
@@ -90,7 +92,7 @@ jobs:
           ./vendor/bin/phpunit --coverage-clover coverage-tests-${{ matrix.testsuite }}.xml --testsuite=${{ matrix.testsuite }}
 
       - name: Coverage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: success()
         with:
           name: coverage-reports
@@ -101,7 +103,9 @@ jobs:
     name: "All Parallel Tests passed"
     needs: [ tests ]
 
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - ubuntu
 
     steps:
       - name: Download build from artifact
