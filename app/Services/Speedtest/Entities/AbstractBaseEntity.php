@@ -2,9 +2,13 @@
 
 namespace App\Services\Speedtest\Entities;
 
+use stdClass;
+
 class AbstractBaseEntity
 {
-    public function __construct(protected \stdClass $data) {}
+    public function __construct(protected stdClass $data)
+    {
+    }
 
     public function __get($name): mixed
     {

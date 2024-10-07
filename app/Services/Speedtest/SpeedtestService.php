@@ -9,10 +9,10 @@ use App\Services\Speedtest\Entities\SpeedtestEntity;
 use App\Services\Speedtest\Interfaces\ISpeedtestExecutor;
 use Illuminate\Support\Facades\Event;
 
-class SpeedtestService
+readonly class SpeedtestService
 {
     public function __construct(
-        private readonly ISpeedtestExecutor $executor
+        private ISpeedtestExecutor $executor
     ) {
     }
 

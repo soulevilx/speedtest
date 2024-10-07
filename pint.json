@@ -6,6 +6,8 @@
         "new_with_braces": {
             "anonymous_class": false,
             "named_class": false
-        }
+        },
+        "single_line_empty_body" : false,
+        "concat_space": { "spacing": "one" }
     }
 }
