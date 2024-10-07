@@ -11,11 +11,12 @@ class SpeedtestExecutor implements ISpeedtestExecutor
         string $format = 'json',
         ?int $serverId = null,
     ): string {
+        $args = [];
         $args[] = 'speedtest';
-        $args[] = '--format='.$format;
+        $args[] = '--format=' . $format;
 
         if ($serverId !== null) {
-            $args[] = '--server-id='.$serverId;
+            $args[] = '--server-id=' . $serverId;
         }
 
         $process = new Process($args);
