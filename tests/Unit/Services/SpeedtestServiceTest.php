@@ -27,7 +27,7 @@ class SpeedtestServiceTest extends TestCase
                     $mock->shouldReceive('execute')
                         ->andReturn(
                             file_get_contents(
-                                __DIR__.'/../../fixtures/speedtest.json'
+                                __DIR__ . '/../../Fixtures/speedtest.json'
                             )
                         );
                 }
@@ -56,7 +56,7 @@ class SpeedtestServiceTest extends TestCase
         $hostname = $this->faker->name;
         $ip = $this->faker->ipv4;
         $service->save($hostname, $ip, $result);
-        $this->assertDatabaseHas('speedtest', [
+        $this->assertDatabaseHas('speedtests', [
             'hostname' => $hostname,
             'ip' => $ip,
         ]);

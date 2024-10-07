@@ -15,7 +15,7 @@ class ApiControllerTest extends TestCase
                 'hostname' => $this->faker->name,
                 'ip' => $this->faker->ipv4,
                 'data' => file_get_contents(
-                    __DIR__.'/../../Fixtures/speedtest.json'
+                    __DIR__ . '/../../Fixtures/speedtest.json'
                 ),
             ]
         );
@@ -37,7 +37,7 @@ class ApiControllerTest extends TestCase
                 'file' => UploadedFile::fake()->createWithContent(
                     $this->faker->word,
                     file_get_contents(
-                        __DIR__.'/../../Fixtures/speedtest.json'
+                        __DIR__ . '/../../Fixtures/speedtest.json'
                     )
                 ),
             ]
