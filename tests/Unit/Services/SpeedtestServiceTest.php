@@ -27,7 +27,7 @@ class SpeedtestServiceTest extends TestCase
                     $mock->shouldReceive('execute')
                         ->andReturn(
                             file_get_contents(
-                                __DIR__.'/../../fixtures/speedtest.json'
+                                __DIR__ . '/../../Fixtures/speedtest.json'
                             )
                         );
                 }
