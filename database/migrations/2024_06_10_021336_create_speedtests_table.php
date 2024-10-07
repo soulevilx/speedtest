@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid()->unique();
 
             $table->string('hostname')->index();
-            $table->string('ip')->unique();
+            $table->string('ip')->index();
 
             $table->json('ping');
             $table->json('download');
