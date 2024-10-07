@@ -43,7 +43,9 @@ jobs:
     name: Execute UnitTest
     needs: [ code_standards ]
 
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - ubuntu
 
     strategy:
       matrix:
@@ -101,7 +103,9 @@ jobs:
     name: "All Parallel Tests passed"
     needs: [ tests ]
 
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - ubuntu
 
     steps:
       - name: Download build from artifact
