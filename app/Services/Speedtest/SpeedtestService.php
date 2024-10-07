@@ -1,39 +1,42 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Speedtest;
 
 use App\Events\AfterSpeedtestSaved;
 use App\Events\BeforeSavingSpeedtest;
 use App\Models\Speedtest;
+use App\Services\Speedtest\Entities\SpeedtestEntity;
+use App\Services\Speedtest\Interfaces\ISpeedtestExecutor;
 use Illuminate\Support\Facades\Event;
-use Symfony\Component\Process\Process;
 
 class SpeedtestService
 {
-    private array $args = [];
+    public function __construct(
+        private readonly ISpeedtestExecutor $executor
+    ) {
+    }
 
     public function speedtest(
         string $format = 'json',
-        ?int   $serverId = null,
-    ): Speedtest
-    {
-        $this->args[] = 'speedtest';
-        $this->args[] = '--format=' . $format;
+        ?int $serverId = null,
+    ): SpeedtestEntity {
+        $result = $this->executor->execute(
+            $format,
+            $serverId
+        );
 
-        if ($serverId !== null) {
-            $this->args[] = '--server-id=' . $serverId;
-        }
-
-        $result = $this->execute($this->args);
-
-        return $this->save($result);
+        return new SpeedtestEntity(json_decode($result));
     }
 
-    public function save(string $speedtest): Speedtest
-    {
-        $result = json_decode($speedtest, true);
+    public function save(
+        string $hostname,
+        string $ip,
+        SpeedtestEntity $speedtest
+    ): Speedtest {
+        $result = $speedtest->toArray();
 
-        unset($result['type']);
+        $result['hostname'] = $hostname;
+        $result['ip'] = $ip;
         $result['download_speed'] = $result['download']['bandwidth'];
         $result['upload_speed'] = $result['upload']['bandwidth'];
         $result['internal_ip'] = $result['interface']['internalIp'];
@@ -46,13 +49,5 @@ class SpeedtestService
         Event::dispatch(new AfterSpeedtestSaved($speedtest));
 
         return $speedtest;
-    }
-
-    private function execute(array $args): string
-    {
-        $process = new Process($args);
-        $process->run();
-
-        return $process->getOutput();
     }
 }

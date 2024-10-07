@@ -1,0 +1,54 @@
+{
+    "type": "result",
+    "timestamp": "2024-10-07T02:05:56Z",
+    "ping": {
+        "jitter": 15.879,
+        "latency": 90.906,
+        "low": 77.499,
+        "high": 112.869
+    },
+    "download": {
+        "bandwidth": 451104,
+        "bytes": 6039544,
+        "elapsed": 14824,
+        "latency": {
+            "iqm": 537.690,
+            "low": 128.372,
+            "high": 1574.519,
+            "jitter": 92.792
+        }
+    },
+    "upload": {
+        "bandwidth": 9306569,
+        "bytes": 66880285,
+        "elapsed": 7272,
+        "latency": {
+            "iqm": 176.652,
+            "low": 25.352,
+            "high": 359.782,
+            "jitter": 56.619
+        }
+    },
+    "isp": "CMC Telecom Infrastructure Company",
+    "interface": {
+        "internalIp": "192.168.181.105",
+        "name": "en0",
+        "macAddr": "BA:1D:96:15:EE:F9",
+        "isVpn": false,
+        "externalIp": "118.69.233.229"
+    },
+    "server": {
+        "id": 11342,
+        "host": "vhcm.vietpn.com",
+        "port": 8080,
+        "name": "VIETPN CO, LTD",
+        "location": "Ho Chi Minh City",
+        "country": "Viet Nam",
+        "ip": "221.132.29.208"
+    },
+    "result": {
+        "id": "e265eea3-1729-4ddd-b342-85a6c8bc3e58",
+        "url": "https://www.speedtest.net/result/c/e265eea3-1729-4ddd-b342-85a6c8bc3e58",
+        "persisted": true
+    }
+}

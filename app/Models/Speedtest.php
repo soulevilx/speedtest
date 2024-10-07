@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use Emadadly\LaravelUuid\Uuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Speedtest extends Model
 {
-    use HasFactory;
     use Uuids;
 
     protected $fillable = [
+        'hostname',
+        'ip',
         'ping',
         'download',
         'upload',
@@ -27,6 +27,8 @@ class Speedtest extends Model
     ];
 
     protected $casts = [
+        'hostname' => 'string',
+        'ip' => 'string',
         'ping' => 'array',
         'download' => 'array',
         'upload' => 'array',
