@@ -56,7 +56,7 @@ class SpeedtestServiceTest extends TestCase
         $hostname = $this->faker->name;
         $ip = $this->faker->ipv4;
         $service->save($hostname, $ip, $result);
-        $this->assertDatabaseHas('speedtest', [
+        $this->assertDatabaseHas('speedtests', [
             'hostname' => $hostname,
             'ip' => $ip,
         ]);
