@@ -29,14 +29,10 @@ readonly class SpeedtestService
     }
 
     public function save(
-        string $hostname,
-        string $ip,
         SpeedtestEntity $speedtest
     ): Speedtest {
         $result = $speedtest->toArray();
 
-        $result['hostname'] = $hostname;
-        $result['ip'] = $ip;
         $result['download_speed'] = $result['download']['bandwidth'];
         $result['upload_speed'] = $result['upload']['bandwidth'];
         $result['internal_ip'] = $result['interface']['internalIp'];

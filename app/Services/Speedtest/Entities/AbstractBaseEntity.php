@@ -23,4 +23,9 @@ class AbstractBaseEntity
     {
         return json_decode(json_encode($this->data), true);
     }
+
+    public function toJson(): string
+    {
+        return json_encode($this->data);
+    }
 }
