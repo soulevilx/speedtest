@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Services\Speedtest\SpeedtestService;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -19,13 +20,14 @@ class Speedtest implements ShouldQueue
 
     /**
      * Execute the job.
+     * @throws Exception
      */
     public function handle(SpeedtestService $service): void
     {
-        $result = $service->speedtest();
+        $service->speedtest();
 
         if ($this->save) {
-            $service->save($result);
+            $service->save();
         }
     }
 }

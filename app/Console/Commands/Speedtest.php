@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Entities\SpeedtestEntity;
-use App\Services\Speedtest\SpeedtestService;
 use Illuminate\Console\Command;
 
 class Speedtest extends Command
