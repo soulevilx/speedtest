@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\SpeedtestEntity;
 use App\Http\Requests\CreateSpeedtestRequest;
 use App\Http\Resources\SpeedtestResource;
-use App\Models\Speedtest;
-use App\Services\Speedtest\Entities\SpeedtestEntity;
 use App\Services\Speedtest\SpeedtestService;
 
 class ApiController extends Controller

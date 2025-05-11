@@ -2,10 +2,10 @@
 
 namespace App\Services\Speedtest;
 
+use App\Entities\SpeedtestEntity;
 use App\Events\AfterSpeedtestSaved;
 use App\Events\BeforeSavingSpeedtest;
 use App\Models\Speedtest;
-use App\Services\Speedtest\Entities\SpeedtestEntity;
 use App\Services\Speedtest\Interfaces\ISpeedtestExecutor;
 use Illuminate\Support\Facades\Event;
 
@@ -20,23 +20,16 @@ readonly class SpeedtestService
         string $format = 'json',
         ?int $serverId = null,
     ): SpeedtestEntity {
-        $result = $this->executor->execute(
-            $format,
-            $serverId
-        );
-
-        return new SpeedtestEntity(json_decode($result));
+        return new SpeedtestEntity(json_decode(
+            $this->executor->execute($format, $serverId)
+        ));
     }
 
     public function save(
         SpeedtestEntity $speedtest
     ): Speedtest {
-        $result = $speedtest->toArray();
 
-        $result['download_speed'] = $result['download']['bandwidth'];
-        $result['upload_speed'] = $result['upload']['bandwidth'];
-        $result['internal_ip'] = $result['interface']['internalIp'];
-        $result['external_ip'] = $result['interface']['externalIp'];
+        $result = $speedtest->toArray();
 
         Event::dispatch(new BeforeSavingSpeedtest($result));
 

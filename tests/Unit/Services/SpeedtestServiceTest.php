@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Services;
 
-use App\Services\Speedtest\Entities\DownloadEntity;
-use App\Services\Speedtest\Entities\InterfaceEntity;
-use App\Services\Speedtest\Entities\PingEntity;
-use App\Services\Speedtest\Entities\ResultEntity;
-use App\Services\Speedtest\Entities\ServerEntity;
-use App\Services\Speedtest\Entities\SpeedtestEntity;
-use App\Services\Speedtest\Entities\UploadEntity;
+use App\Entities\Speedtest\DownloadEntity;
+use App\Entities\Speedtest\InterfaceEntity;
+use App\Entities\Speedtest\PingEntity;
+use App\Entities\Speedtest\ResultEntity;
+use App\Entities\Speedtest\ServerEntity;
+use App\Entities\Speedtest\UploadEntity;
+use App\Entities\SpeedtestEntity;
 use App\Services\Speedtest\Interfaces\ISpeedtestExecutor;
 use App\Services\Speedtest\SpeedtestService;
 use Mockery;
