@@ -11,7 +11,7 @@ class Speedtest extends Command
      *
      * @var string
      */
-    protected $signature = 'speedtest:run {--save}';
+    protected $signature = 'speedtest:run';
 
     /**
      * The console command description.
@@ -27,7 +27,7 @@ class Speedtest extends Command
     {
         $this->output->text('Starting speedtest');
 
-        \App\Jobs\Speedtest::dispatch($this->option('save'));
+        \App\Jobs\Speedtest::dispatch();
 
         $this->output->success('Queued');
     }

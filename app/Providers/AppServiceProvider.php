@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Services\Speedtest\Executors\SpeedtestExecutor;
-use App\Services\Speedtest\Interfaces\ISpeedtestExecutor;
+use App\Services\Process\Executors\SpeedtestExecutor;
+use App\Services\Speedtest\SpeedtestService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,8 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        app()->bind(ISpeedtestExecutor::class, function () {
-            return new SpeedtestExecutor;
+        app()->bind(SpeedtestService::class, function () {
+            return new SpeedtestService(
+                new SpeedtestExecutor
+            );
         });
     }
 

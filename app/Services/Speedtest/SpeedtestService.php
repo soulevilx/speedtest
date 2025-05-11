@@ -3,13 +3,10 @@
 namespace App\Services\Speedtest;
 
 use App\Entities\SpeedtestEntity;
-use App\Events\AfterSpeedtestSaved;
-use App\Events\BeforeSavingSpeedtest;
 use App\Models\Speedtest;
 use App\Repositories\SpeedtestRepository;
-use App\Services\Speedtest\Interfaces\ISpeedtestExecutor;
+use App\Services\Process\Interfaces\IProcess;
 use Exception;
-use Illuminate\Support\Facades\Event;
 
 readonly class SpeedtestService
 {
@@ -20,17 +17,20 @@ readonly class SpeedtestService
     protected SpeedtestEntity $speedtest;
 
     public function __construct(
-        private ISpeedtestExecutor $executor
+        private IProcess $executor
     ) {
     }
 
-    public function speedtest(
-        string $format = self::FORMAT,
-        ?int $serverId = self::SERVER_ID,
-    ): self {
-        $this->speedtest = new SpeedtestEntity(json_decode(
-            $this->executor->execute($format, $serverId)
-        ));
+    /**
+     * @throws Exception
+     */
+    public function speedtest(): self
+    {
+        if ($this->executor->execute()) {
+            $this->speedtest = $this->executor->getOutput();
+
+            $this->save($this->speedtest);
+        }
 
         return $this;
     }
@@ -38,13 +38,10 @@ readonly class SpeedtestService
     /**
      * @throws Exception
      */
-    public function save(): Speedtest
+    public function save(SpeedtestEntity $speedtest): Speedtest
     {
-        if (! isset($this->speedtest)) {
-            throw new Exception('Speedtest not saved');
-        }
-
-        return app(SpeedtestRepository::class)->create($this->speedtest);
+        app(SpeedtestRepository::class)
+            ->create($speedtest);
     }
 
     public function getResult(): SpeedtestEntity

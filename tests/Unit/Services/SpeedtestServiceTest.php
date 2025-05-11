@@ -9,7 +9,7 @@ use App\Entities\Speedtest\ResultEntity;
 use App\Entities\Speedtest\ServerEntity;
 use App\Entities\Speedtest\UploadEntity;
 use App\Entities\SpeedtestEntity;
-use App\Services\Speedtest\Interfaces\ISpeedtestExecutor;
+use App\Services\Process\Interfaces\IProcess;
 use App\Services\Speedtest\SpeedtestService;
 use Mockery;
 use Mockery\MockInterface;
@@ -20,9 +20,9 @@ class SpeedtestServiceTest extends TestCase
     public function testSpeedtest()
     {
         $this->instance(
-            ISpeedtestExecutor::class,
+            IProcess::class,
             Mockery::mock(
-                ISpeedtestExecutor::class,
+                IProcess::class,
                 function (MockInterface $mock) {
                     $mock->shouldReceive('execute')
                         ->andReturn(
