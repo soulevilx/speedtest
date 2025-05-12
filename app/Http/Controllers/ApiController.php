@@ -13,20 +13,18 @@ class ApiController extends Controller
     /**
      * @throws \Exception
      */
-    public function create(CreateSpeedtestRequest $request): JsonResponse
+    public function create(
+        CreateSpeedtestRequest $request,
+        SpeedtestService $service
+    ): JsonResponse
     {
-        $service = app(SpeedtestService::class);
-
         if ($request->has('file')) {
-            $entity = new SpeedtestEntity(
-                json_decode($request->file('file')->getContent())
-            );
+            $content = $request->file('file')->getContent();
         } else {
-            $entity = new SpeedtestEntity(
-                json_decode($request->input('data'))
-            );
+            $content = $request->input('data');
         }
 
+        $entity = new SpeedtestEntity(json_decode($content));
         $model = $service->save($entity);
 
         return response()->json(
