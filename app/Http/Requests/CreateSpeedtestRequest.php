@@ -22,8 +22,6 @@ class CreateSpeedtestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'hostname' => 'required|string',
-            'ip' => 'required|string',
         ];
     }
 }
