@@ -3,35 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateSpeedtestRequest;
-use App\Http\Resources\SpeedtestResource;
-use App\Models\Speedtest;
-use App\Services\Speedtest\Entities\SpeedtestEntity;
-use App\Services\Speedtest\SpeedtestService;
+use App\Services\SpeedTestApiService;
+use Exception;
+use Illuminate\Http\JsonResponse;
 
 class ApiController extends Controller
 {
-    public function create(CreateSpeedtestRequest $request)
+    /**
+     * @throws Exception
+     */
+    public function create(CreateSpeedtestRequest $request): JsonResponse
     {
-        $service = app(SpeedtestService::class);
-
-        if ($request->has('file')) {
-            $entity = new SpeedtestEntity(
-                json_decode($request->file('file')->getContent())
-            );
-        } else {
-            $entity = new SpeedtestEntity(
-                json_decode($request->input('data'))
-            );
-        }
-
-        $model = $service->save(
-            $request->input('hostname'),
-            $request->input('ip'),
-            $entity
-        );
-
-        return response()->json(
-            SpeedtestResource::make($model)
-        );
+        return app(SpeedTestApiService::class)->save($request);
     }
 }

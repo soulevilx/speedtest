@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Services;
 
-use App\Services\Speedtest\Entities\DownloadEntity;
-use App\Services\Speedtest\Entities\InterfaceEntity;
-use App\Services\Speedtest\Entities\PingEntity;
-use App\Services\Speedtest\Entities\ResultEntity;
-use App\Services\Speedtest\Entities\ServerEntity;
-use App\Services\Speedtest\Entities\SpeedtestEntity;
-use App\Services\Speedtest\Entities\UploadEntity;
-use App\Services\Speedtest\Interfaces\ISpeedtestExecutor;
+use App\Entities\Speedtest\DownloadEntity;
+use App\Entities\Speedtest\InterfaceEntity;
+use App\Entities\Speedtest\PingEntity;
+use App\Entities\Speedtest\ResultEntity;
+use App\Entities\Speedtest\ServerEntity;
+use App\Entities\Speedtest\UploadEntity;
+use App\Entities\SpeedtestEntity;
+use App\Services\Process\Interfaces\IProcess;
 use App\Services\Speedtest\SpeedtestService;
 use Mockery;
 use Mockery\MockInterface;
@@ -20,14 +20,14 @@ class SpeedtestServiceTest extends TestCase
     public function testSpeedtest()
     {
         $this->instance(
-            ISpeedtestExecutor::class,
+            IProcess::class,
             Mockery::mock(
-                ISpeedtestExecutor::class,
+                IProcess::class,
                 function (MockInterface $mock) {
                     $mock->shouldReceive('execute')
                         ->andReturn(
                             file_get_contents(
-                                __DIR__.'/../../fixtures/speedtest.json'
+                                __DIR__ . '/../../Fixtures/speedtest.json'
                             )
                         );
                 }
@@ -56,7 +56,7 @@ class SpeedtestServiceTest extends TestCase
         $hostname = $this->faker->name;
         $ip = $this->faker->ipv4;
         $service->save($hostname, $ip, $result);
-        $this->assertDatabaseHas('speedtest', [
+        $this->assertDatabaseHas('speedtests', [
             'hostname' => $hostname,
             'ip' => $ip,
         ]);

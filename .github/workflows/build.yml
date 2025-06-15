@@ -5,7 +5,7 @@ name: Speedtest - Build & Tests
 on:
   # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
   pull_request:
-    branches: [ develop, master ]
+    branches: [ develop ]
     types: [ opened, synchronize ]
 
 jobs:
@@ -24,6 +24,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pvoc
+
       - name: Setup application
         if: success()
         run: |
@@ -37,7 +43,9 @@ jobs:
     name: Execute UnitTest
     needs: [ code_standards ]
 
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - ubuntu
 
     strategy:
       matrix:
@@ -62,6 +70,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: pcov
+
       - name: Setup application
         if: success()
         run: |
@@ -78,31 +92,34 @@ jobs:
           ./vendor/bin/phpunit --coverage-clover coverage-tests-${{ matrix.testsuite }}.xml --testsuite=${{ matrix.testsuite }}
 
       - name: Coverage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: success()
         with:
           name: coverage-reports
           path: coverage-tests-${{ matrix.testsuite }}.xml
           retention-days: 1
+          overwrite: true
 
   finalizing_build:
     name: "All Parallel Tests passed"
     needs: [ tests ]
 
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - ubuntu
 
     steps:
       - name: Download build from artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: coverage-reports
           path: ./reports
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         if: success() && github.event.pull_request.draft == false
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./reports
 
       - name: "Finalizing Tasks"

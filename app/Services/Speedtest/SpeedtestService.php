@@ -2,52 +2,50 @@
 
 namespace App\Services\Speedtest;
 
-use App\Events\AfterSpeedtestSaved;
-use App\Events\BeforeSavingSpeedtest;
+use App\Entities\SpeedtestEntity;
 use App\Models\Speedtest;
-use App\Services\Speedtest\Entities\SpeedtestEntity;
-use App\Services\Speedtest\Interfaces\ISpeedtestExecutor;
-use Illuminate\Support\Facades\Event;
+use App\Repositories\SpeedtestRepository;
+use App\Services\Process\Interfaces\IProcess;
+use Exception;
 
 readonly class SpeedtestService
 {
+    public const FORMAT = 'json';
+
+    public const SERVER_ID = null;
+
+    protected SpeedtestEntity $speedtest;
+
     public function __construct(
-        private ISpeedtestExecutor $executor
+        private IProcess $executor
     ) {
     }
 
-    public function speedtest(
-        string $format = 'json',
-        ?int $serverId = null,
-    ): SpeedtestEntity {
-        $result = $this->executor->execute(
-            $format,
-            $serverId
-        );
+    /**
+     * @throws Exception
+     */
+    public function speedtest(): self
+    {
+        if ($this->executor->execute()) {
+            $this->speedtest = $this->executor->getOutput();
 
-        return new SpeedtestEntity(json_decode($result));
+            $this->save($this->speedtest);
+        }
+
+        return $this;
     }
 
-    public function save(
-        string $hostname,
-        string $ip,
-        SpeedtestEntity $speedtest
-    ): Speedtest {
-        $result = $speedtest->toArray();
+    /**
+     * @throws Exception
+     */
+    public function save(SpeedtestEntity $speedtest): Speedtest
+    {
+        return app(SpeedtestRepository::class)
+            ->create($speedtest);
+    }
 
-        $result['hostname'] = $hostname;
-        $result['ip'] = $ip;
-        $result['download_speed'] = $result['download']['bandwidth'];
-        $result['upload_speed'] = $result['upload']['bandwidth'];
-        $result['internal_ip'] = $result['interface']['internalIp'];
-        $result['external_ip'] = $result['interface']['externalIp'];
-
-        Event::dispatch(new BeforeSavingSpeedtest($result));
-
-        $speedtest = Speedtest::create($result);
-
-        Event::dispatch(new AfterSpeedtestSaved($speedtest));
-
-        return $speedtest;
+    public function getResult(): SpeedtestEntity
+    {
+        return $this->speedtest;
     }
 }

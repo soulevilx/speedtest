@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\Speedtest;
+use App\Entities\SpeedtestEntity;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -16,7 +16,7 @@ class AfterSpeedtestSaved
     /**
      * Create a new event instance.
      */
-    public function __construct(private readonly Speedtest $speedtest)
+    public function __construct(private readonly SpeedtestEntity $speedtest)
     {
         //
     }
