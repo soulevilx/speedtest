@@ -40,7 +40,7 @@ readonly class SpeedtestService
      */
     public function save(SpeedtestEntity $speedtest): Speedtest
     {
-        app(SpeedtestRepository::class)
+        return app(SpeedtestRepository::class)
             ->create($speedtest);
     }
 
